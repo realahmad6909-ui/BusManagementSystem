@@ -1,6 +1,6 @@
-package org.example.controller;
+package com.uet.busmanagement.controller;
 
-import org.example.model.Bus;
+import com.uet.busmanagement.model.Bus;
 
 public class BusController {
 

@@ -1,4 +1,4 @@
-package org.example.model;
+package com.uet.busmanagement.model;
 
 
 public class Bus {
