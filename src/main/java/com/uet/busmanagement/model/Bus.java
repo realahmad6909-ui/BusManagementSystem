@@ -1,71 +1,52 @@
 package com.uet.busmanagement.model;
-
+import com.uet.busmanagement.model.Route;
 
 public class Bus {
 
-    private int busid;
-    private String busnumber;
-    private String busname;
+    private int busId;
+    private String busNumber;
+    private String busName;
+    private int seatingCapacity;
+    private int standingCapacity;
+    private Route route;
+    private String driverId;
 
-    private int totalseats;
-    private int bookedseats;
+    public Bus(int busId, String busNumber, String busName,
+               int seatingCapacity, int standingCapacity,
+               Route route, String driverId) {
 
-    private String routeid;
-    private String driverid;
-
-    private String currentlocation;
-    private boolean active;
-
-    public Bus(int busid, String busnumber, String busname, //Constructor
-               int totalseats, String routeid, String driverid)
-    {
-
-        this.busid = busid;
-        this.busnumber = busnumber;
-        this.busname = busname;
-        this.totalseats = totalseats;
-        this.routeid = routeid;
-        this.driverid = driverid;
-        this.bookedseats = 0;
-        this.currentlocation = "Not Assigned";
-        this.active = true;
+        this.busId = busId;
+        this.busNumber = busNumber;
+        this.busName = busName;
+        this.seatingCapacity = seatingCapacity;
+        this.standingCapacity = standingCapacity;
+        this.route = route;
+        this.driverId = driverId;
     }
 
-    public void bookSeat()
-    {
-        if (bookedseats < totalseats)
-        {
-            bookedseats++;
-        }
-        else
-        {
-            IO.println("Sorry! No Available Seats");
-        }
+    public int getTotalCapacity() {
+        return seatingCapacity + standingCapacity;
     }
 
-    public int getAvailableSeats()
+    public int getBusId()
+
     {
-        return totalseats - bookedseats;
+        return busId;
     }
 
-
-    public void updateLocation(String location)
-    {
-        this.currentlocation = location;
+    public Route getRoute() {
+        return route;
     }
 
-    public int getBusid()
-    {
-        return busid;
-    }
-
-    public String getBusName()
-    {
-        return busname;
-    }
-
-    public String getBusNumber()
-    {
-        return busnumber;
+    @Override
+    public String toString() {
+        return "Bus{" +
+                "ID=" + busId +
+                ", Number='" + busNumber + '\'' +
+                ", Seating=" + seatingCapacity +
+                ", Standing=" + standingCapacity +
+                ", Route='" + route.getRouteId() + '\'' +
+                ", Driver='" + driverId + '\'' +
+                '}';
     }
 }

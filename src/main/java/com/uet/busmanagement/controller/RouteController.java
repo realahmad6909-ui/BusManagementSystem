@@ -18,11 +18,12 @@ public class RouteController {
         System.out.println("Route added successfully!");
     }
 
-    public void displayAllRoutes()
-    {
+    public String displayAllRoutes() {
+        String result = "";
+
         for (Route r : routes) {
-            r.displayRoute();
-            System.out.println("-------------------");
+            result += r.toString() + "\n";
         }
+        return result;
     }
 }

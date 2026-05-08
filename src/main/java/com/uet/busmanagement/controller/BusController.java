@@ -1,22 +1,34 @@
 package com.uet.busmanagement.controller;
-
+import com.uet.busmanagement.model.Route;
 import com.uet.busmanagement.model.Bus;
+import java.util.ArrayList;
 
 public class BusController {
 
-    public void createBus() {
+    private ArrayList<Bus> buses;
 
-        Bus bus = new Bus(
-                1,
-                "BUS-01",
-                "UET BUS",
-                40,
-                "R1",
-                "D1"
-        );
+    public BusController() {
+        buses = new ArrayList<>();
+    }
 
-        System.out.println("Bus Created Successfully!");
-        System.out.println("Bus Name: " + bus.getBusName());
-        System.out.println("Available Seats: " + bus.getAvailableSeats());
+    public void addBus(Bus bus) {
+        buses.add(bus);
+        System.out.println("Bus added successfully!");
+    }
+
+    public void displayAllBuses() {
+        for (Bus b : buses) {
+            System.out.println(b);  // automatic toString call
+        }
+    }
+
+    public void createBus(Route route) {
+
+        Bus b1 = new Bus(1, "2894", "UET Bus",
+                40, 20, route, "D1");
+
+        addBus(b1);
+        route.addBus(b1);
+
     }
 }
