@@ -1,77 +1,56 @@
 package com.uet.busmanagement.model;
 
-public class Student {
-
+// Student ne User ko inherit kar liya, ab name, email automatic is ke paas hain
+public class Student extends User
+{
     private int studentId;
-    private String name;
+    private String regNum;
     private String department;
-    private String regnum;
     private String busNumber;
-
 
     public Student()
     {
+        super(); // Parent class ke constructor ko call kiya
     }
 
-    // Parameterized Constructor
-    public Student(int studentId, String name, String department, String regnum)
-    {
-        this.studentId = studentId;
-        this.name = name;
-        this.department = department;
-        this.regnum = regnum;
-    }
-
-    //  Getters and Setters
+    // Getters and Setters sirf child ke variables ke liye
     public int getStudentId()
     {
         return studentId;
     }
+
     public void setStudentId(int studentId)
     {
         this.studentId = studentId;
     }
-    public String getName()
+
+    public String getRegNum()
     {
-        return name;
+        return regNum;
     }
-    public void setName(String name)
+
+    public void setRegNum(String regNum)
     {
-        this.name = name;
+        this.regNum = regNum;
     }
+
     public String getDepartment()
     {
         return department;
     }
+
     public void setDepartment(String department)
     {
         this.department = department;
     }
-    public String getRegnum()
-    {
-        return regnum;
-    }
-    public void setRegnum(String regnum)
-    {
-        this.regnum = regnum;
-    }
-    public void assignBus(String busNumber)
-    {
-        this.busNumber = busNumber;
-    }
+
     public String getBusNumber()
     {
         return busNumber;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" +
-                "ID=" + studentId +
-                ", Name='" + name + '\'' +
-                ", Dept='" + department + '\'' +
-                ", Roll='" + regnum + '\'' +
-                ", Bus='" + (busNumber != null ? busNumber : "Not Assigned") + '\'' +
-                '}';
+    public void setBusNumber(String busNumber)
+    {
+        this.busNumber = busNumber;
     }
 }
