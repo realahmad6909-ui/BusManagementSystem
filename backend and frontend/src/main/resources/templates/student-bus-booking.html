@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>UET Active Transit Portal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* 🔴 TUMHARA ORIGINAL DARK BACKGROUND */
+        body {
+            background-color: #2b0505;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* 🟡 NAV BAR WITH YELLOW HEADINGS */
+        .navbar-custom {
+            background-color: #4a0000;
+            padding: 15px 0;
+            border-bottom: 2px solid #ffcc00;
+        }
+        .portal-title {
+            color: #ffcc00 !important;
+            font-weight: bold;
+            font-size: 1.6rem;
+        }
+
+        /* 🎴 ORIGINAL DARK CARDS STYLE */
+        .route-card {
+            background: #3d1111;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #5a1a1a;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .route-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+        }
+
+        .card-body {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        /* 🟡 ID BADGE */
+        .id-badge {
+            background-color: #ffcc00;
+            color: #000000;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .route-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            font-size: 0.95rem;
+            color: #dddddd;
+            margin-bottom: 10px;
+        }
+        .info-item i {
+            color: #ffcc00;
+            width: 24px;
+        }
+
+        /* 🟢 STATUS BAR: AVAILABLE (GREEN) */
+        .status-available {
+            background-color: rgba(25, 135, 84, 0.2);
+            color: #26e67b;
+            border: 1px solid #198754;
+            font-size: 0.9rem;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 15px;
+            margin-top: auto;
+        }
+
+        /* 🛑 STATUS BAR: FULL (RED) */
+        .status-full {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: #ff6b6b;
+            border: 1px solid #dc3545;
+            font-size: 0.9rem;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 15px;
+            margin-top: auto;
+        }
+
+        /* 🎪 ACTION BUTTONS */
+        .btn-action {
+            font-weight: bold;
+            width: 100%;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-book {
+            background-color: #ffcc00;
+            color: #000000;
+        }
+        .btn-book:hover {
+            background-color: #e6b800;
+        }
+        .btn-complain {
+            background-color: #e05345;
+            color: #ffffff;
+        }
+        .btn-complain:hover {
+            background-color: #c84235;
+        }
+
+        /* 🔔 GREEN NOTIFICATION ALERT BAR */
+        .alert-custom-success {
+            background-color: rgba(25, 135, 84, 0.2) !important;
+            border: 1px solid #198754 !important;
+            color: #26e67b !important;
+            border-radius: 8px;
+        }
+        .alert-custom-danger {
+            background-color: rgba(220, 53, 69, 0.2) !important;
+            border: 1px solid #dc3545 !important;
+            color: #ff6b6b !important;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-custom mb-5">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1 portal-title">
+            <i class="fas fa-bus text-warning me-2"></i> UET Active Transit Portal
+        </span>
+        <div>
+            <a th:href="@{/students/dashboard}" class="btn btn-outline-light btn-sm px-3 fw-bold me-2">Dashboard</a>
+            <a th:href="@{/students/logout}" class="btn btn-outline-warning btn-sm px-3 fw-bold">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h3 class="mb-4 fw-bold" style="color: #dddddd;"><i class="fas fa-map-signs me-2 text-warning"></i> Available Bus Routes</h3>
+
+    <div th:if="${param.msg}" class="alert alert-custom-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <i class="fas fa-check-circle me-2"></i> <span th:text="${param.msg}">Success Flash notification</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div th:if="${param.error}" class="alert alert-custom-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i> <span th:text="${param.error}">Error Flash notification</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+        <div class="col" th:each="route : ${routes}">
+            <div class="card route-card">
+                <div class="card-body">
+
+                    <div class="id-badge">ID: <span th:text="${route.routeId}">02</span></div>
+
+                    <div class="route-title" th:text="${route.routeName}">R-02</div>
+
+                    <div class="info-item">
+                        <i class="fas fa-bus"></i> Bus Name: <strong>UET Bus</strong>
+                    </div>
+                    <div class="info-item mb-4">
+                        <i class="fas fa-hashtag"></i> Bus No:
+                        <span th:text="${route.bus != null ? 'UET-' + route.routeId : 'N/A'}">N/A</span>
+                    </div>
+
+                    <div th:if="${route.bus == null || route.bus.seatingCapacity <= 0}" class="w-100 mt-auto">
+                        <div class="status-full">
+                            <i class="fas fa-times-circle me-1"></i> 0 - BUS IS FULL
+                        </div>
+
+                        <form th:action="@{/students/complain}" method="POST">
+                            <input type="hidden" name="complainRouteId" th:value="${route.routeId}">
+                            <button type="submit" class="btn-action btn-complain">
+                                <i class="fas fa-bullhorn me-2"></i> Request Extra Bus (Complain)
+                            </button>
+                        </form>
+                    </div>
+
+                    <div th:if="${route.bus != null && route.bus.seatingCapacity > 0}" class="w-100 mt-auto">
+                        <div class="status-available">
+                            <i class="fas fa-check-circle me-1"></i>
+                            <span th:text="${route.bus.seatingCapacity + ' Total Capacity Available'}">45 Total Capacity Available</span>
+                        </div>
+
+                        <form th:action="@{/students/book}" method="POST">
+                            <input type="hidden" name="routeId" th:value="${route.routeId}">
+                            <button type="submit" class="btn-action btn-book">
+                                <i class="fas fa-ticket-alt me-2"></i> Book This Bus
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

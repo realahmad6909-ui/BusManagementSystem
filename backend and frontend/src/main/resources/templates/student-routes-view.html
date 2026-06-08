@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Routes & Stops - UET Transport</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%); min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; color: #ffffff; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 6%; background: rgba(0, 0, 0, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .logo-area { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 700; }
+        .logo-area i { color: #FFD700; }
+
+        .back-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; padding: 0.5rem 1.2rem; border-radius: 50px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .back-btn:hover { background: #FFD700; color: #28050A; border-color: #FFD700; }
+
+        .main-container { flex-grow: 1; display: flex; flex-direction: column; align-items: center; padding: 3rem 2rem; }
+
+        .title-section { margin-bottom: 2.5rem; text-align: center; }
+        .title-section h2 { font-size: 2.2rem; font-weight: 800; text-transform: uppercase; }
+        .title-section h2 span { color: #FFD700; }
+        .title-section p { color: #cccccc; font-size: 0.9rem; margin-top: 0.3rem; }
+
+        .search-box { width: 100%; max-width: 500px; position: relative; margin-bottom: 2.5rem; }
+        .search-box input { width: 100%; padding: 0.8rem 1rem 0.8rem 2.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; color: white; font-size: 0.95rem; outline: none; transition: 0.3s; }
+        .search-box input:focus { border-color: #FFD700; background: rgba(0,0,0,0.2); }
+        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #FFD700; }
+
+        .routes-container { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; max-width: 850px; }
+
+        /* Master Route Item Wrapper */
+        .route-wrapper { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; overflow: hidden; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .route-wrapper:hover { border-color: rgba(255, 215, 0, 0.2); }
+
+        /* Main Clickable Row */
+        .route-main-row { padding: 1.8rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .route-main-row:hover { background: rgba(255,255,255,0.02); }
+
+        .route-info-main { display: flex; align-items: center; gap: 20px; }
+        .route-number { background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.2); color: #FFD700; width: 65px; height: 65px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; }
+
+        .route-details { display: flex; flex-direction: column; gap: 4px; }
+        .route-name { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.5px; }
+        .click-hint { font-size: 0.8rem; color: #FFD700; font-weight: 400; display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+
+        .route-action-indicator { text-align: right; color: rgba(255,255,255,0.4); font-size: 1.2rem; transition: 0.3s; padding-right: 5px; }
+
+        /* Collapsible Stops Panel */
+        .stops-panel { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); background: rgba(0, 0, 0, 0.2); border-top: 0 solid rgba(255,255,255,0.05); }
+        .stops-content { padding: 1.5rem 2rem; }
+
+        /* Stops Sub-Table */
+        .stops-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .stops-table th { padding: 0.6rem 1rem; color: #FFD700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .stops-table td { padding: 0.8rem 1rem; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.03); color: #e0e0e0; }
+        .stops-table tr:last-child td { border-bottom: none; }
+        .stops-table i { color: #ff4a4a; margin-right: 8px; }
+
+        /* Active Expand State */
+        .route-wrapper.active { border-color: #FFD700; background: rgba(255, 255, 255, 0.06); }
+        .route-wrapper.active .stops-panel { max-height: 1000px; border-top-width: 1px; transition: max-height 0.5s ease-in-out; }
+        .route-wrapper.active .route-action-indicator { transform: rotate(180deg); color: #FFD700; }
+
+        footer { padding: 1.5rem 6%; font-size: 0.85rem; color: rgba(255, 255, 255, 0.3); text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.03); margin-top: 2rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>UET Transit Network</span>
+    </div>
+    <a th:href="@{/students/dashboard}" class="back-btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
+</header>
+
+<div class="main-container">
+    <div class="title-section">
+        <h2>Live <span>Routes & Stops</span></h2>
+        <p>Click on any route line block to dynamically view its breakdown of stops and timing details.</p>
+    </div>
+
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="routeSearch" onkeyup="filterRoutes()" placeholder="Search by Route ID or Destination...">
+    </div>
+
+    <div class="routes-container" id="routesList">
+
+        <div class="route-wrapper" th:each="route : ${routes}">
+
+            <div class="route-main-row" onclick="toggleAccordion(this)">
+                <div class="route-info-main">
+                    <div class="route-number" th:text="${route.routeId}">R1</div>
+                    <div class="route-details">
+                        <span class="route-name" th:text="${route.routeName}">Main Campus to Hostel</span>
+                        <span class="click-hint"><i class="fas fa-eye"></i> Click to view stops schedule</span>
+                    </div>
+                </div>
+                <div class="route-action-indicator">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <div class="stops-panel">
+                <div class="stops-content">
+                    <table class="stops-table">
+                        <thead>
+                        <tr>
+                            <th>Stop Station Name</th>
+                            <th>Morning Arrival</th>
+                            <th>Afternoon Departure</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr th:each="stop : ${stopsMap.get(route.routeId)}">
+                            <td>
+                                <i class="fas fa-map-pin"></i>
+                                <span th:text="${stop.stop_name}">Stop Name</span>
+                            </td>
+                            <td th:text="${stop.morning_arrival_time}">07:30 AM</td>
+                            <td th:text="${stop.afternoon_departure_time}">02:15 PM</td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(stopsMap.get(route.routeId))}">
+                            <td colspan="3" style="text-align: center; color: #aaaaaa; font-style: italic; padding: 1rem 0;">
+                                No stop stations linked to this route inside the database system.
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div th:if="${#lists.isEmpty(routes)}" style="text-align: center; color: #aaaaaa; padding: 3rem; width: 100%;">
+            <i class="fas fa-route" style="font-size: 3.5rem; color: #FFD700; margin-bottom: 1rem; opacity: 0.4;"></i>
+            <p>No active routes found in the database system currently.</p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Handles collapsible slide animation toggles
+    function toggleAccordion(element) {
+        let wrapper = element.parentElement;
+        wrapper.classList.toggle('active');
+    }
+
+    // Handles rapid client side textual query filters
+    function filterRoutes() {
+        let input = document.getElementById('routeSearch').value.toLowerCase();
+        let wrappers = document.getElementsByClassName('route-wrapper');
+
+        for (let i = 0; i < wrappers.length; i++) {
+            let routeHeader = wrappers[i].getElementsByClassName('route-main-row')[0];
+            let text = routeHeader.innerText.toLowerCase();
+            if (text.includes(input)) {
+                wrappers[i].style.display = "block";
+            } else {
+                wrappers[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+<footer>
+    University of Engineering & Technology | © 2026 Core Fleet Mapping Systems
+</footer>
+
+</body>
+</html>

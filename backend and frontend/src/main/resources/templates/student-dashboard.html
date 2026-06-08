@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - UET Transport</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #ffffff;
+            padding: 2rem 6%;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logo-area i { color: #FFD700; font-size: 1.6rem; }
+
+        .welcome-text {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text h1 { font-size: 2.2rem; font-weight: 800; text-transform: uppercase; }
+        .welcome-text h1 span { color: #FFD700; }
+        .welcome-text p { color: #cccccc; font-size: 0.95rem; margin-top: 5px; }
+
+        .alert-banner {
+            background: rgba(255, 215, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #FFD700;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .alert-banner i { font-size: 1.2rem; animation: pulseIcon 2s infinite; }
+
+        .status-counter-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .status-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 1.2rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .status-pill .info-side p { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+        .status-pill .info-side h3 { font-size: 1.2rem; font-weight: 700; margin-top: 4px; }
+        .status-pill i { font-size: 1.8rem; opacity: 0.8; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: auto;
+        }
+
+        .menu-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.1);
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1.5rem auto;
+            font-size: 2.2rem;
+            color: #FFD700;
+            transition: 0.3s;
+        }
+
+        .menu-card:hover .icon-circle {
+            background: #FFD700;
+            color: #28050A;
+            transform: scale(1.05);
+        }
+
+        .menu-card h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .menu-card p { font-size: 0.85rem; color: #cccccc; line-height: 1.5; }
+
+        .notification-dot {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+            animation: pulseDot 2s infinite;
+        }
+
+        .logout-btn {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid #e74c3c;
+            color: #ff8080;
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .logout-btn:hover { background: #e74c3c; color: #fff; transform: translateY(-2px); }
+
+        footer { text-align: center; padding-top: 4rem; font-size: 0.85rem; color: rgba(255, 255, 255, 0.3); border-top: 1px solid rgba(255,255,255,0.03); margin-top: 3rem; }
+
+        @keyframes pulseIcon {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; transform: scale(1.08); }
+            100% { opacity: 0.6; }
+        }
+        @keyframes pulseDot {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <i class="fas fa-graduation-cap"></i>
+        <span>UET Transport Portal</span>
+    </div>
+    <a th:href="@{/students/logout}" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Secure Logout
+    </a>
+</header>
+
+<div class="welcome-text">
+    <h1>Welcome Back, <span th:text="${student.regNum != null ? student.regNum : 'Student'}">Student</span>!</h1>
+    <p>Manage your transport credentials, verify invoices, and track route details in real-time.</p>
+</div>
+
+<div th:if="${param.msg}" style="background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71;" class="alert-banner">
+    <i class="fas fa-check-circle"></i>
+    <span><strong th:text="${param.msg}">Success Notification Message</strong></span>
+</div>
+<div th:if="${param.error}" style="background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #ff8080;" class="alert-banner">
+    <i class="fas fa-exclamation-triangle"></i>
+    <span><strong th:text="${param.error}">Error Notification Message</strong></span>
+</div>
+
+<div class="alert-banner" id="liveNoticeBanner" style="display: none;">
+    <i class="fas fa-bullhorn" id="noticeIcon"></i>
+    <span id="noticeContent"><strong>Notice:</strong> Loading latest updates...</span>
+</div>
+
+<div class="status-counter-bar">
+    <div class="status-pill">
+        <div class="info-side">
+            <p>Portal Status</p>
+            <h3 th:text="${student.status != null ? student.status : 'PENDING'}"
+                th:style="${student.status == 'APPROVED' || student.status == 'ACTIVE' ? 'color: #2ecc71;' : 'color: #f1c40f;'}">PENDING</h3>
+        </div>
+        <i class="fas fa-id-card" th:style="${student.status == 'APPROVED' || student.status == 'ACTIVE' ? 'color: #2ecc71;' : 'color: #f1c40f;'}"></i>
+    </div>
+
+    <div class="status-pill">
+        <div class="info-side">
+            <p>Student Reg No</p>
+            <h3 style="color: #fff; font-family: monospace;" th:text="${student.regNum != null ? student.regNum : 'N/A'}">UET-USER</h3>
+        </div>
+        <i class="fas fa-user-tag" style="color: #FFD700;"></i>
+    </div>
+
+    <div class="status-pill">
+        <div class="info-side">
+            <p>Department</p>
+            <h3 style="color: #fff;" th:text="${student.department != null ? student.department : 'Verified Student'}">CS</h3>
+        </div>
+        <i class="fas fa-university" style="color: #FFD700;"></i>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+
+    <a th:href="@{/students/profile}" class="menu-card">
+        <div class="icon-circle"><i class="fas fa-user-circle"></i></div>
+        <h2>View Profile & Status</h2>
+        <p>Check registration profile data and administrative approval logs.</p>
+    </a>
+
+    <a th:href="@{/students/routes}" class="menu-card">
+        <div class="icon-circle"><i class="fas fa-map-marked-alt"></i></div>
+        <h2>Route Details</h2>
+        <p>Look up assigned route IDs, dynamic bus stops, and precise university timings.</p>
+    </a>
+
+    <a th:href="@{/students/book}" class="menu-card">
+        <div class="icon-circle"><i class="fas fa-bus"></i></div>
+        <h2>Book a Bus</h2>
+        <p>Apply for transport seats allocation and manage active bus passes.</p>
+    </a>
+
+    <a th:href="@{/students/profile-edit}" class="menu-card">
+        <div class="icon-circle"><i class="fas fa-user-edit"></i></div>
+        <h2>Edit Personal Info</h2>
+        <p>Modify contact details, emergency phone numbers, and department records.</p>
+    </a>
+
+    <a th:href="@{/students/challans}" class="menu-card">
+        <div class="notification-dot" th:if="${challans != null and !#lists.isEmpty(challans)}">View Dues</div>
+        <div class="icon-circle"><i class="fas fa-file-invoice-dollar"></i></div>
+        <h2>Fee Challans</h2>
+        <p>Track your student dues, access digital invoices, and check payment histories.</p>
+    </a>
+
+    <a th:href="@{/students/logout}" class="menu-card" style="border-color: rgba(231, 76, 60, 0.15);">
+        <div class="icon-circle" style="color: #e74c3c; background: rgba(231, 76, 60, 0.1);"><i class="fas fa-power-off"></i></div>
+        <h2 style="color: #ff8080;">Secure Logout</h2>
+        <p>Terminate current transport portal session and clear session security tokens.</p>
+    </a>
+
+</div>
+
+<footer>
+    University of Engineering & Technology | © 2026 Bus Management System
+</footer>
+
+<script>
+    let lastSeenNotice = "";
+
+    function checkForAdminNotices() {
+        fetch('/student/api/get-notice')
+            .then(response => response.text())
+            .then(noticeText => {
+                const banner = document.getElementById('liveNoticeBanner');
+                const content = document.getElementById('noticeContent');
+                const icon = document.getElementById('noticeIcon');
+
+                if (noticeText !== "NO_NEW_NOTICE" && noticeText.trim() !== "") {
+                    lastSeenNotice = noticeText;
+
+                    if (banner && content) {
+                        banner.style.display = 'flex';
+                        banner.style.background = 'linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(255, 165, 0, 0.25) 100%)';
+                        banner.style.border = '1px solid #FFD700';
+                        banner.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.2)';
+
+                        if (icon) {
+                            icon.className = 'fas fa-exclamation-circle';
+                            icon.style.color = '#FFD700';
+                        }
+
+                        content.innerHTML = '<strong>Important Announcement:</strong> ' + noticeText;
+                    }
+                } else {
+                    if (banner && content) {
+                        banner.style.display = 'flex';
+                        banner.style.background = 'rgba(255, 215, 0, 0.1)';
+                        banner.style.border = '1px solid rgba(255, 215, 0, 0.25)';
+                        banner.style.boxShadow = 'none';
+
+                        if (icon) {
+                            icon.className = 'fas fa-bullhorn';
+                            icon.style.color = '#FFD700';
+                        }
+
+                        content.innerHTML = '<strong>Notice:</strong> Bus routes for the upcoming semester have been optimized. Please double-check your timing updates under the "Route Details" tab.';
+                    }
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    setInterval(checkForAdminNotices, 5000);
+    window.addEventListener('DOMContentLoaded', checkForAdminNotices);
+</script>
+
+</body>
+</html>

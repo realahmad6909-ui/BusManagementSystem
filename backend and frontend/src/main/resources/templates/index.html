@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UET Bus Management System</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth; /* 📜 Smooth scrolling for FAQs */
+        }
+
+        body {
+            background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background decoration for premium feel */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+            z-index: 0;
+        }
+
+        /* Header / Top Navbar Styling */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 6%;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-area i {
+            color: #FFD700;
+            font-size: 1.6rem;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        nav a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            margin-left: 2.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            color: #FFD700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+
+        /* ✨ Dashboard Highlight Class with pulse animation */
+        .nav-dashboard-highlight {
+            background: #FFD700 !important;
+            color: #28050A !important;
+            padding: 0.5rem 1.2rem !important;
+            border-radius: 8px !important;
+            font-weight: 700 !important;
+            text-shadow: none !important;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3) !important;
+            animation: pulse 2s infinite;
+        }
+        .nav-dashboard-highlight:hover {
+            background: #ffffff !important;
+            color: #4A0E17 !important;
+        }
+
+        /* Main Center Content Container */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            z-index: 5;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3.5rem 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+            max-width: 550px;
+            width: 95%;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .icon-container {
+            font-size: 5rem;
+            color: #FFD700;
+            margin-bottom: 1.5rem;
+            animation: bounce 3s infinite;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        h1 span {
+            color: #FFD700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #cccccc;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        /* Premium Get Started Button */
+        .btn-get-started {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #FFD700;
+            color: #28050A;
+            padding: 1rem 3.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-get-started:hover {
+            background: #ffffff;
+            color: #4A0E17;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-get-started i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-get-started:hover i {
+            transform: translateX(6px);
+        }
+
+        /* 🌟 NEW: FAQs Section Styling */
+        .faqs-container {
+            padding: 5rem 6%;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 5;
+        }
+
+        .faqs-container h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .faqs-container h2 span {
+            color: #FFD700;
+        }
+
+        .faq-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .faq-question {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #FFD700;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .faq-answer {
+            font-size: 0.9rem;
+            color: #dddddd;
+            line-height: 1.6;
+            padding-left: 28px;
+        }
+
+        /* Simple Bottom Footer */
+        footer {
+            padding: 1.5rem 6%;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            z-index: 10;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); box-shadow: 0 4px 25px rgba(255, 215, 0, 0.5); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <i class="fas fa-graduation-cap"></i>
+        <span>UET Transport</span>
+    </div>
+    <nav>
+        <a th:href="@{/}" class="active">Home</a>
+
+        <a th:if="${session.userRole == 'STUDENT'}" th:href="@{/students/dashboard}" class="nav-dashboard-highlight">
+            <i class="fas fa-user-graduate"></i> Dashboard
+        </a>
+
+        <a th:if="${session.userRole == 'ADMIN'}" th:href="@{/admin/dashboard}" class="nav-dashboard-highlight">
+            <i class="fas fa-user-shield"></i> Admin Dashboard
+        </a>
+
+        <a th:if="${session.userRole == null}" th:href="@{/dashboards}">Dashboards</a>
+        <a th:if="${session.userRole == null}" th:href="@{/students/login}">Student Login</a>
+
+        <a href="#faqs-section">FAQs</a>
+    </nav>
+</header>
+
+<div class="main-container">
+    <div class="welcome-card">
+        <div class="icon-container">
+            <i class="fas fa-bus-alt"></i>
+        </div>
+
+        <h1>WELCOME TO <br>UET <span>BUS</span></h1>
+        <p class="subtitle">Smart Transport Solutions for Students, Faculty & Staff</p>
+
+        <a th:href="${session.userRole != null ? (session.userRole == 'ADMIN' ? '/admin/dashboard' : '/students/dashboard') : '/dashboards'}" class="btn-get-started">
+            Get Started <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+<section id="faqs-section" class="faqs-container">
+    <h2>Frequently Asked <span>Questions</span></h2>
+
+    <div class="faq-wrapper">
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-question-circle"></i> How can I register for the UET Transport Service?
+            </div>
+            <div class="faq-answer">
+                Go to the "Student Login" page from the top navigation bar and click on "Register here". Fill in your required details (Name, Registration Number, and Department) and upload your profile picture to create your account.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-exclamation-circle"></i> Why is my account status showing "PENDING"?
+            </div>
+            <div class="faq-answer">
+                For security and verification purposes, all new student accounts are sent directly to the Admin approval queue. The Administrator verifies your credentials and changes your status to APPROVED, after which you can log in to the portal.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-route"></i> How can I track my bus route status and timing?
+            </div>
+            <div class="faq-answer">
+                Once your account is approved by the Admin, simply log in to the Student Portal. Your personal dashboard will display real-time updates regarding your specific bus route, timings, and fee invoices.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <i class="fas fa-id-card"></i> Can I change my department or registration number later?
+            </div>
+            <div class="faq-answer">
+                To maintain data integrity, students are not allowed to modify their primary registration details directly. In case of any errors, please contact the Transport Office or the system Administrator to request an update.
+            </div>
+        </div>
+    </div>
+</section>
+<footer>
+    University of Engineering & Technology | © 2026 Bus Management System
+</footer>
+
+</body>
+</html>

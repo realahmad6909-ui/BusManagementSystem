@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Buses - UET Transport</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%); min-height: 100vh; color: #ffffff; padding: 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 2rem; }
+        .logo-title { font-size: 1.4rem; font-weight: 700; color: #FFD700; display: flex; align-items: center; gap: 10px; }
+        .back-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1.2rem; border-radius: 50px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
+        .back-btn:hover { background: #FFD700; color: #28050A; border-color: #FFD700; }
+
+        .content-container { background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 2rem; box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow-x: auto; }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .table-header h3 { font-size: 1.3rem; font-weight: 600; }
+        .add-bus-btn { background: #FFD700; color: #28050A; border: none; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; transition: 0.3s; }
+        .add-bus-btn:hover { background: white; color: #4A0E17; transform: translateY(-2px); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; table-layout: auto; }
+        th { color: #FFD700; padding: 1rem 0.75rem; border-bottom: 2px solid rgba(255,255,255,0.1); font-size: 0.8rem; text-transform: uppercase; white-space: nowrap; text-align: center; }
+        td { padding: 1rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem; color: #e0e0e0; white-space: nowrap; text-align: center; vertical-align: middle; }
+        tr:hover td { background: rgba(255,255,255,0.02); color: white; }
+
+        .badge { display: inline-block; padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.4); white-space: nowrap; }
+
+        .action-cell { display: flex; justify-content: center; align-items: center; }
+        .delete-btn-link { background: rgba(255, 74, 74, 0.15); border: 1px solid #ff4a4a; color: #ff4a4a; padding: 0.4rem 0.8rem; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; cursor: pointer; }
+        .delete-btn-link:hover { background: #ff4a4a; color: white; box-shadow: 0 0 10px rgba(255, 74, 74, 0.3); }
+
+        /* Modal Settings */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: #3a0b12; border: 2px solid #FFD700; padding: 2.5rem; border-radius: 15px; width: 100%; max-width: 450px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 5px; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label { font-size: 0.8rem; color: #ccc; }
+        .form-group input, .form-group select { padding: 0.55rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; }
+        .form-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem; grid-column: span 2; }
+
+        .cancel-btn { background: transparent; border: 1px solid #ccc; color: #ccc; padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer; }
+        .save-btn { background: #FFD700; border: none; color: #28050A; padding: 0.5rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 700; }
+        .danger-btn { background: #ff4a4a; border: none; color: white; padding: 0.5rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 700; }
+        .danger-btn:hover { background: #e03333; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-title"><i class="fas fa-bus"></i> Fleet Management / Buses</div>
+    <a href="/admin/dashboard" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+</header>
+
+<div class="content-container">
+    <div class="table-header">
+        <h3>Registered UET Fleet List</h3>
+        <button class="add-bus-btn" onclick="openModal()"><i class="fas fa-plus"></i> Add New Bus</button>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 8%;">ID</th>
+            <th style="width: 14%;">Bus Number</th>
+            <th style="width: 14%;">Bus Name</th>
+            <th style="width: 10%;">Seating</th>
+            <th style="width: 10%;">Standing</th>
+            <th style="width: 11%;">Route ID</th>
+            <th style="width: 11%;">Driver ID</th>
+            <th style="width: 10%;">Status</th>
+            <th style="width: 12%;">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bus : ${buses}">
+            <td><strong th:text="'#' + ${bus.busId != null ? bus.busId : '0'}">#1</strong></td>
+            <td th:text="${bus.busNumber != null ? bus.busNumber : 'N/A'}">2894</td>
+            <td th:text="${bus.busName != null ? bus.busName : 'N/A'}">B-01</td>
+
+            <td th:text="${bus.seatingCapacity != 0 ? bus.seatingCapacity : '52'}">52</td>
+            <td th:text="${bus.standingCapacity != 0 ? bus.standingCapacity : '20'}">20</td>
+
+            <td th:text="${bus.route != null && bus.route.routeId != null ? bus.route.routeId : 'R-Default'}">R-1</td>
+            <td th:text="${bus.driver != null ? bus.driver.userId : 'D-None'}">D-101</td>
+
+            <td>
+                <span class="badge" th:text="${bus.status != null ? bus.status : 'ACTIVE'}">ACTIVE</span>
+            </td>
+
+            <td>
+                <div class="action-cell">
+                    <a th:onclick="confirmCustomDelete([[${bus.busNumber}]])" class="delete-btn-link">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(buses)}">
+            <td colspan="9" style="text-align: center; color: #b5b5b5; padding: 3rem; font-weight: 500; letter-spacing: 0.5px;">
+                <i class="fas fa-folder-open" style="display: block; font-size: 2rem; margin-bottom: 10px; color: #FFD700;"></i>
+                No buses registered in the database!
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal" id="addBusModal">
+    <div class="modal-content">
+        <h3 style="color: #FFD700; margin-bottom: 1.5rem; text-align: center;">Register Fleet Bus</h3>
+        <form action="/buses/add" method="POST">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Bus ID</label>
+                    <input type="number" name="busId" required>
+                </div>
+                <div class="form-group">
+                    <label>Bus Number</label>
+                    <input type="text" name="busNumber" placeholder="LES-24-45" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Bus Name / Model</label>
+                    <input type="text" name="busName" placeholder="Hino Eco" required>
+                </div>
+                <div class="form-group">
+                    <label>Seating Cap.</label>
+                    <input type="number" name="seatingCapacity" required>
+                </div>
+                <div class="form-group">
+                    <label>Standing Cap.</label>
+                    <input type="number" name="standingCapacity" required>
+                </div>
+                <div class="form-group">
+                    <label>Route ID</label>
+                    <input type="text" name="routeId" required>
+                </div>
+                <div class="form-group">
+                    <label>Driver ID</label>
+                    <input type="text" name="driverId" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="Active">Active</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="save-btn">Save Bus</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="deleteConfirmModal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff4a4a; margin-bottom: 1rem;"></i>
+        <h3 style="color: #FFD700; margin-bottom: 0.5rem;">Are you sure?</h3>
+        <p style="color: #e0e0e0; font-size: 0.9rem; margin-bottom: 1.5rem;">Do you really want to remove this bus from the fleet? This action cannot be undone.</p>
+        <div class="form-buttons" style="justify-content: center;">
+            <button type="button" class="cancel-btn" onclick="closeDeleteModal()">Cancel</button>
+            <button type="button" id="finalDeleteBtn" class="danger-btn">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal() { document.getElementById('addBusModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('addBusModal').style.display = 'none'; }
+
+    // Custom Delete Confirmation Handler
+    let busToDelete = "";
+    function confirmCustomDelete(busNumber) {
+        busToDelete = busNumber;
+        document.getElementById('deleteConfirmModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteConfirmModal').style.display = 'none';
+        busToDelete = "";
+    }
+
+    // Modal Confirmation Trigger execution
+    document.getElementById('finalDeleteBtn').onclick = function() {
+        if(busToDelete) {
+            window.location.href = "/buses/delete?busNumber=" + encodeURIComponent(busToDelete);
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - UET Transport</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%); min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; color: #ffffff; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 6%; background: rgba(0, 0, 0, 0.15); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .logo-area { display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 700; }
+        .logo-area i { color: #FFD700; }
+
+        .back-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; padding: 0.5rem 1.2rem; border-radius: 50px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .back-btn:hover { background: #FFD700; color: #28050A; border-color: #FFD700; }
+
+        .main-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 3rem 2rem; }
+
+        .edit-card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; padding: 3rem 2.5rem; width: 100%; max-width: 500px; box-shadow: 0 20px 45px rgba(0,0,0,0.4); }
+
+        .card-header { text-align: center; margin-bottom: 2rem; }
+        .card-header i { font-size: 3.5rem; color: #FFD700; margin-bottom: 0.5rem; }
+        .card-header h2 { font-size: 1.6rem; font-weight: 700; }
+        .card-header p { font-size: 0.85rem; color: #aaa; margin-top: 0.3rem; }
+
+        .form-group { margin-bottom: 1.5rem; text-align: left; }
+        .form-group label { font-size: 0.8rem; color: #ddd; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #FFD700; font-size: 0.9rem; }
+        .input-wrapper input { width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 0.95rem; transition: 0.3s; }
+        .input-wrapper input:focus { border-color: #FFD700; outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.15); }
+
+        .input-wrapper input:disabled { background: rgba(255,255,255,0.05); color: #888; border-color: rgba(255,255,255,0.05); cursor: not-allowed; }
+
+        .btn-submit { width: 100%; padding: 0.8rem; background: #FFD700; color: #28050A; border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.3s; text-transform: uppercase; margin-top: 1rem; }
+        .btn-submit:hover { background: white; color: #4A0E17; }
+
+        footer { padding: 1.5rem 6%; font-size: 0.85rem; color: rgba(255, 255, 255, 0.3); text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.03); }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <i class="fas fa-user-edit"></i>
+        <span>Modify Information</span>
+    </div>
+    <a th:href="@{/students/dashboard}" class="back-btn"><i class="fas fa-arrow-left"></i> Cancel</a>
+</header>
+
+<div class="main-container">
+    <div class="edit-card">
+
+        <div class="card-header">
+            <i class="fas fa-id-card-alt"></i>
+            <h2>Update Profile Info</h2>
+            <p>You can change your display name and department records.</p>
+        </div>
+
+        <form th:action="@{/students/profile-edit}" method="POST">
+
+            <input type="hidden" name="regNum" th:value="${student.regNum}" />
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="name" th:value="${student.name}" required placeholder="Enter new name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Department</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-building"></i>
+                    <input type="text" name="department" th:value="${student.department}" required placeholder="Enter new department">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Registration Number (Locked)</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="text" th:value="${student.regNum}" disabled>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Save Changes</button>
+        </form>
+
+    </div>
+</div>
+
+<footer>
+    University of Engineering & Technology | © 2026 Registry Modification Console
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboards - UET Transport</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background decoration for premium feel */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+            z-index: 0;
+        }
+
+        /* Top Navbar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 6%;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logo-area i {
+            color: #FFD700;
+        }
+
+        /* Center Content Container */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 3rem 2rem;
+            z-index: 5;
+        }
+
+        .title-section {
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8rem ease-out;
+        }
+
+        .title-section h2 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .title-section h2 span {
+            color: #FFD700;
+        }
+
+        .title-section p {
+            color: #cccccc;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        /* 4 Options Grid (2x2 Pattern) */
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(240px, 300px));
+            gap: 2rem;
+            width: 100%;
+            max-width: 650px;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* Management Cards Styling - EXACT MATCH TO YOUR SYSTEM */
+        .manage-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 2.5rem 1.5rem;
+            text-decoration: none;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .manage-card .icon-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .manage-card i {
+            font-size: 2.4rem;
+            color: #FFD700;
+        }
+
+        .manage-card span {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .manage-card p {
+            font-size: 0.8rem;
+            color: #aaaaaa;
+            font-weight: 300;
+        }
+
+        /* Hover Actions */
+        .manage-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #FFD700;
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.15);
+        }
+
+        .manage-card:hover .icon-box {
+            background: #FFD700;
+            transform: scale(1.05);
+        }
+
+        .manage-card:hover i {
+            color: #28050A;
+        }
+
+        /* Exit Specific Styling */
+        .manage-card.exit-card:hover {
+            border-color: #ff4a4a;
+            box-shadow: 0 15px 35px rgba(255, 74, 74, 0.15);
+        }
+        .manage-card.exit-card .icon-box {
+            background: rgba(255, 74, 74, 0.08);
+            border-color: rgba(255, 74, 74, 0.2);
+        }
+        .manage-card.exit-card i {
+            color: #ff4a4a;
+        }
+        .manage-card.exit-card:hover .icon-box {
+            background: #ff4a4a;
+        }
+        .manage-card.exit-card:hover i {
+            color: #ffffff;
+        }
+
+        /* Footer */
+        footer {
+            padding: 1.5rem 6%;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <i class="fas fa-bus-alt"></i>
+        <span>UET Fleet Gateways</span>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="title-section">
+        <h2>Select <span>Portal Dashboard</span></h2>
+        <p>Choose your designated domain console to proceed with the system.</p>
+    </div>
+
+    <div class="management-grid">
+
+        <a href="/admin/dashboard" class="manage-card">
+            <div class="icon-box"><i class="fas fa-user-shield"></i></div>
+            <span>Admin Dashboard</span>
+            <p>Configure fleet, mapping & database records</p>
+        </a>
+
+        <a href="/students/login" class="manage-card">
+            <div class="icon-box"><i class="fas fa-user-graduate"></i></div>
+            <span>Student Dashboard</span>
+            <p>Log in to access routes and fee ledgers</p>
+        </a>
+
+        <a th:href="@{/drivers/login}" class="manage-card">
+            <div class="icon-box"><i class="fas fa-id-card"></i></div>
+            <span>Driver Dashboard</span>
+            <p>View assigned route paths and trips</p>
+        </a>
+
+        <a href="/" class="manage-card exit-card">
+            <div class="icon-box"><i class="fas fa-sign-out-alt"></i></div>
+            <span style="color: #ff4a4a;">Exit Portal</span>
+            <p>Return to the main greeting landing page</p>
+        </a>
+
+    </div>
+</div>
+
+<footer>
+    University of Engineering & Technology | © 2026 Core Fleet Administration
+</footer>
+
+</body>
+</html>

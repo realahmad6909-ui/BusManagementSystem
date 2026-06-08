@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints Ledger - UET Transport</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%); min-height: 100vh; color: #ffffff; padding: 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 2rem; }
+        .logo-title { font-size: 1.4rem; font-weight: 700; color: #FFD700; display: flex; align-items: center; gap: 10px; }
+        .back-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem 1.2rem; border-radius: 50px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
+        .back-btn:hover { background: #FFD700; color: #28050A; border-color: #FFD700; }
+
+        .content-container { background: rgba(255,255,255,0.04); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 2rem; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+
+        /* Balanced 4-Column Table Grid Configration */
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th { color: #FFD700; padding: 1.2rem; border-bottom: 2px solid rgba(255,255,255,0.1); font-size: 0.85rem; text-transform: uppercase; text-align: center; }
+        td { padding: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.95rem; color: #e0e0e0; text-align: center; vertical-align: middle; }
+
+        .col-reg { width: 25%; font-weight: 600; color: #FFD700; }
+        .col-route { width: 25%; }
+        .col-status { width: 25%; }
+        .col-actions { width: 25%; }
+
+        .status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 0.35rem 0.9rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-decoration: none; min-width: 95px; background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3); margin: 0 auto; }
+
+        .resolve-btn-link { background: rgba(46, 204, 113, 0.1); border: 1px solid #2ecc71; color: #2ecc71; padding: 0.45rem 1.1rem; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; justify-content: center; margin: 0 auto; cursor: pointer; }
+        .resolve-btn-link:hover { background: #2ecc71; color: white; transform: translateY(-1px); }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-title"><i class="fas fa-exclamation-circle"></i> Transport Grievance Portal / Complaints Dispatch</div>
+    <a href="/admin/dashboard" class="back-btn"><i class="fas fa-arrow-left"></i> Main Dashboard</a>
+</header>
+
+<div class="content-container">
+    <div class="table-header">
+        <h3 style="font-size: 1.1rem; font-weight: 600;"><i class="fas fa-folder-open" style="color: #FFD700; margin-right: 5px;"></i> Active Student Complaints</h3>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th class="col-reg">Student Reg No</th>
+            <th class="col-route">Route Affected</th>
+            <th class="col-status">Current Status</th>
+            <th class="col-actions">Resolve Action Grid</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="complaint : ${complaints}">
+            <td class="col-reg" th:text="${complaint.regnum}">2022-CS-112</td>
+            <td class="col-route" style="font-weight: 500;"><i class="fas fa-bus-alt" style="color: #FFD700; margin-right: 6px;"></i><span th:text="${complaint.routeId}">Route 04</span></td>
+            <td class="col-status">
+                <span class="status-badge">PENDING</span>
+            </td>
+            <td class="col-actions">
+                <a th:href="@{/complaints/admin/resolve(routeId=${complaint.routeId})}" class="resolve-btn-link">
+                    <i class="fas fa-check-double"></i> Mark Route Fixed
+                </a>
+            </td>
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(complaints)}">
+            <td colspan="4" style="color: #b5b5b5; padding: 5rem; text-align: center;">
+                <i class="fas fa-smile-beam" style="display: block; font-size: 3rem; margin-bottom: 12px; color: #FFD700;"></i>
+                Excellent! No pending student complaints inside current operations grid.
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

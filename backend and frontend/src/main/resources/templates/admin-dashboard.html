@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - UET Transport</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 6%;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logo-area i {
+            color: #FFD700;
+        }
+
+        .logout-btn {
+            background: rgba(255, 74, 74, 0.2);
+            border: 1px solid #ff4a4a;
+            color: #ff4a4a;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff4a4a;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 74, 74, 0.4);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 3rem 2rem;
+            z-index: 5;
+        }
+
+        .title-section {
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .title-section h2 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .title-section h2 span {
+            color: #FFD700;
+        }
+
+        .title-section p {
+            color: #cccccc;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(240px, 300px));
+            gap: 2rem;
+            width: 100%;
+            max-width: 960px;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .manage-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 2.5rem 1.5rem;
+            text-decoration: none;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .manage-card .icon-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .manage-card i {
+            font-size: 2.4rem;
+            color: #FFD700;
+        }
+
+        .manage-card .icon-box.complaint-icon {
+            background: rgba(231, 76, 60, 0.08);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+        .manage-card .icon-box.complaint-icon i {
+            color: #e74c3c;
+        }
+
+        .manage-card span {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .manage-card p {
+            font-size: 0.8rem;
+            color: #aaaaaa;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .manage-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #FFD700;
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.15);
+        }
+
+        .manage-card.complaint-card:hover {
+            border-color: #e74c3c;
+            box-shadow: 0 15px 35px rgba(231, 76, 60, 0.15);
+        }
+
+        .manage-card:hover .icon-box {
+            background: #FFD700;
+            transform: scale(1.05);
+        }
+        .manage-card.complaint-card:hover .icon-box {
+            background: #e74c3c;
+        }
+
+        .manage-card:hover i {
+            color: #28050A;
+        }
+        .manage-card.complaint-card:hover i {
+            color: #ffffff;
+        }
+
+        .sos-container {
+            width: 100%;
+            max-width: 960px;
+            background: rgba(255, 74, 74, 0.08);
+            border: 2px dashed #ff4a4a;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            display: none;
+            animation: pulseBg 2s infinite;
+        }
+
+        .sos-title {
+            color: #ff4a4a;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sos-card {
+            background: #200307;
+            border: 1px solid #ff4a4a;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            gap: 20px;
+        }
+
+        .resolve-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .resolve-btn:hover {
+            background: #27ae60;
+            transform: scale(1.02);
+        }
+
+        .broadcast-container {
+            width: 100%;
+            max-width: 960px;
+            background: rgba(255, 215, 0, 0.03);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 2.5rem;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .broadcast-container h3 {
+            color: #FFD700;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+            padding-bottom: 0.6rem;
+        }
+
+        .form-group-flex {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .input-field {
+            background: #200307;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+        }
+
+        .broadcast-btn {
+            background: #FFD700;
+            color: #28050A;
+            border: none;
+            padding: 0.75rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .broadcast-btn:hover {
+            background: #ffea6c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+        }
+
+        footer {
+            padding: 1.5rem 6%;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 868px) {
+            .management-grid { grid-template-columns: repeat(2, minmax(240px, 300px)); }
+            .form-group-flex { flex-direction: column; }
+        }
+        @media (max-width: 580px) {
+            .management-grid { grid-template-columns: minmax(240px, 300px); }
+            .sos-card { flex-direction: column; align-items: flex-start; }
+            .resolve-btn { width: 100%; justify-content: center; }
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes pulseBg {
+            0% { border-color: #ff4a4a; box-shadow: 0 0 0 0 rgba(255, 74, 74, 0.4); }
+            50% { border-color: #ff8080; box-shadow: 0 0 15px 5px rgba(255, 74, 74, 0.2); }
+            100% { border-color: #ff4a4a; box-shadow: 0 0 0 0 rgba(255, 74, 74, 0.4); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <i class="fas fa-user-shield"></i>
+        <span>Admin Console</span>
+    </div>
+    <a href="/dashboards" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</header>
+
+<div class="main-container">
+
+    <div class="sos-container" id="liveSosPanel">
+        <div class="sos-title">
+            <i class="fas fa-exclamation-triangle fa-spin"></i> CRITICAL EMERGENCY ALERTS DETECTED
+        </div>
+        <div id="alertsListHolder" style="width: 100%; margin-top: 5px;"></div>
+    </div>
+
+    <div class="broadcast-container">
+        <h3><i class="fas fa-paper-plane animate-bounce"></i> Send Broadcast Notice to Students</h3>
+        <div class="form-group-flex">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.8rem; color: #aaa;">Target Audience:</label>
+                <input type="text" class="input-field" value="All Registered Students" readonly style="background: rgba(255,255,255,0.05); color: #FFD700; font-weight: 600; cursor: not-allowed;">
+                <input type="hidden" id="targetRoute" value="ALL">
+            </div>
+            <div style="flex: 2; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.8rem; color: #aaa;">Notice Message:</label>
+                <input type="text" id="noticeMessage" class="input-field" placeholder="Type message (e.g., All university buses will leave 15 minutes early today due to main highway construction delays)...">
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <button onclick="sendStudentNotification()" class="broadcast-btn">
+                <i class="fas fa-bell"></i> Broadcast Notification
+            </button>
+        </div>
+    </div>
+
+    <div class="title-section">
+        <h2>Admin <span>Control Panel</span></h2>
+        <p>Select a management module to configure fleet, mapping, and database records.</p>
+    </div>
+
+    <div class="management-grid">
+
+        <a href="/buses" class="manage-card">
+            <div class="icon-box"><i class="fas fa-bus"></i></div>
+            <span>Manage Buses</span>
+            <p>View, add, or service fleet vehicles</p>
+        </a>
+
+        <a href="/students/manage" class="manage-card">
+            <div class="icon-box"><i class="fas fa-user-graduate"></i></div>
+            <span>Manage Students</span>
+            <p>Configure student route registrations</p>
+        </a>
+
+        <a href="/routes/manage" class="manage-card">
+            <div class="icon-box"><i class="fas fa-map-marked-alt"></i></div>
+            <span>Manage Routes</span>
+            <p>Configure and map transit paths</p>
+        </a>
+
+        <a href="/drivers/manage" class="manage-card">
+            <div class="icon-box"><i class="fas fa-id-card"></i></div>
+            <span>Manage Drivers</span>
+            <p>View, register, and update driver profiles status</p>
+        </a>
+
+        <a href="/finance/dashboard" class="manage-card">
+            <div class="icon-box"><i class="fas fa-file-invoice-dollar"></i></div>
+            <span>Transport Finance</span>
+            <p>Generate fee challans and audit payment logs</p>
+        </a>
+
+        <a href="/complaints/admin/view" class="manage-card complaint-card">
+            <div class="icon-box complaint-icon"><i class="fas fa-exclamation-circle"></i></div>
+            <span>Complaints Center</span>
+            <p>View active student complaints and mark affected routes as resolved</p>
+        </a>
+
+    </div>
+</div>
+
+<footer>
+    University of Engineering & Technology | © 2026 Core Fleet Administration
+</footer>
+
+<script>
+    function sendStudentNotification() {
+        const routeField = document.getElementById('targetRoute');
+        const messageField = document.getElementById('noticeMessage');
+
+        const routeValue = routeField.value;
+        const messageValue = messageField.value.trim();
+
+        if (!messageValue) {
+            alert("⚠️ Validation Error: Cannot broadcast an empty notice string!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('route', routeValue);
+        formData.append('message', messageValue);
+
+        fetch('/admin/api/send-notice', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(res => {
+            if (res.trim() === "SUCCESS") {
+                alert("🚀 Notice Broadcasted! All connected student dashboards will instantly receive the live pop-up announcement.");
+                messageField.value = '';
+            } else {
+                alert("⚠️ Broadcast Error: " + res);
+            }
+        })
+        .catch(err => {
+            console.error("Error dispatching notice routing channel:", err);
+            alert("❌ Network Connection Error: Message pipeline broken.");
+        });
+    }
+
+    function checkLiveAlerts() {
+        fetch('/admin/api/alerts')
+            .then(response => response.json())
+            .then(alerts => {
+                const panel = document.getElementById('liveSosPanel');
+                const holder = document.getElementById('alertsListHolder');
+
+                if (!alerts || alerts.length === 0) {
+                    panel.style.display = 'none';
+                    return;
+                }
+
+                panel.style.display = 'block';
+                holder.innerHTML = '';
+
+                alerts.forEach(alert => {
+                    const card = document.createElement('div');
+                    card.className = 'sos-card';
+                    card.id = 'alert-row-' + alert.id;
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.innerHTML =
+                        '<strong style="color: #ff4a4a; text-transform: uppercase;">[' + (alert.alertType || 'BREAKDOWN') + ']</strong> ' +
+                        '&nbsp;|&nbsp; Bus Affected: <span style="color:#FFD700; font-weight:600;">' + (alert.busNumber || 'N/A') + '</span> ' +
+                        '&nbsp;|&nbsp; Driver User ID: <strong>' + (alert.driverId || 'N/A') + '</strong>' +
+                        '<br><small style="color: #aaa;">Reported Time: ' + (alert.timestamp || 'Just Now') + '</small>';
+
+                    const btnDiv = document.createElement('div');
+                    const btn = document.createElement('button');
+                    btn.className = 'resolve-btn';
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Resolve & Clear';
+
+                    btn.onclick = function() {
+                        clearAlert(alert.id);
+                    };
+
+                    btnDiv.appendChild(btn);
+                    card.appendChild(infoDiv);
+                    card.appendChild(btnDiv);
+
+                    holder.appendChild(card);
+                });
+            })
+            .catch(err => console.error("Alert system polling error:", err));
+    }
+
+    function clearAlert(alertId) {
+        const card = document.getElementById('alert-row-' + alertId);
+        if (!card) return;
+
+        const button = card.querySelector('.resolve-btn');
+        if (button) {
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Clearing...';
+            button.disabled = true;
+        }
+
+        const formData = new FormData();
+        formData.append('id', alertId);
+
+        fetch('/admin/api/alerts/resolve', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(res => {
+            if (res.trim() === "SUCCESS") {
+                card.style.transition = "all 0.4s ease";
+                card.style.opacity = "0";
+                card.style.transform = "translateX(50px)";
+
+                setTimeout(() => {
+                    card.remove();
+                    if (document.querySelectorAll('.sos-card').length === 0) {
+                        document.getElementById('liveSosPanel').style.display = 'none';
+                    }
+                }, 400);
+            } else {
+                alert("⚠️ Server Context Error: " + res);
+                if (button) {
+                    button.innerHTML = '<i class="fas fa-check-circle"></i> Resolve & Clear';
+                    button.disabled = false;
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Error resolving alert:", err);
+            alert(" Network Error: Command base unreachable.");
+            if (button) {
+                button.innerHTML = '<i class="fas fa-check-circle"></i> Resolve & Clear';
+                button.disabled = false;
+            }
+        });
+    }
+
+    setInterval(checkLiveAlerts, 5000);
+    window.addEventListener('DOMContentLoaded', checkLiveAlerts);
+</script>
+</body>
+</html>

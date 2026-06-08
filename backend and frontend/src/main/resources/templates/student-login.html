@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - UET Transport</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 1rem; color: #fff; }
+
+        .login-card { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 24px; padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; position: relative; }
+
+        /* 🔙 Back Button Styling */
+        .back-home-btn {
+            text-align: left;
+            margin-bottom: 1.2rem;
+            display: block;
+        }
+        .back-home-btn a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .back-home-btn a:hover {
+            color: #ffffff;
+            transform: translateX(-3px);
+        }
+
+        .icon-header { width: 65px; height: 65px; background: rgba(255, 215, 0, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 1rem auto; font-size: 1.6rem; color: #FFD700; }
+
+        h2 { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem; }
+        p.subtitle { font-size: 0.85rem; color: #bbb; margin-bottom: 1.8rem; }
+
+        .form-group { text-align: left; margin-bottom: 1.2rem; }
+        .form-group label { font-size: 0.8rem; color: #ddd; display: block; margin-bottom: 5px; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #FFD700; font-size: 0.9rem; }
+        .input-wrapper input { width: 100%; padding: 0.7rem 0.7rem 0.7rem 2.4rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 0.9rem; transition: 0.3s; }
+        .input-wrapper input:focus { border-color: #FFD700; outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); }
+
+        .alert { padding: 0.7rem; border-radius: 8px; font-size: 0.8rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 8px; justify-content: center; }
+        .alert-error { background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #e74c3c; }
+        .alert-info { background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; }
+
+        .btn-submit { width: 100%; padding: 0.75rem; background: #FFD700; color: #28050A; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.3s; text-transform: uppercase; margin-top: 0.5rem; }
+        .btn-submit:hover { background: white; color: #4A0E17; transform: translateY(-1px); }
+
+        .footer-links { margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.2rem; font-size: 0.85rem; color: #ccc; }
+        .footer-links a { color: #FFD700; text-decoration: none; font-weight: 600; margin-left: 4px; transition: 0.2s; }
+        .footer-links a:hover { text-decoration: underline; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+
+    <div class="back-home-btn">
+        <a href="/">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <div class="icon-header"><i class="fas fa-user-graduate"></i></div>
+    <h2>Student Portal</h2>
+    <p class="subtitle">Log in to track route statuses and invoices.</p>
+
+    <div class="alert alert-info" th:if="${message}" th:text="${message}">Success message here</div>
+    <div class="alert alert-error" th:if="${error}" th:text="${error}">Error text here</div>
+
+    <form th:action="@{/students/login}" method="POST">
+        <div class="form-group">
+            <label>Registered Email Address</label>
+            <div class="input-wrapper">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" placeholder="student@uet.edu.pk" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+        </div>
+        <button type="submit" class="btn-submit">Sign In</button>
+    </form>
+
+    <div class="footer-links">
+        Don't have an account?<a th:href="@{/students/register}">Register here</a>
+    </div>
+</div>
+
+</body>
+</html>

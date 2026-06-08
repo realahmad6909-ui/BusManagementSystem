@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Fee Challans - UET Transport</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body {
+            background: linear-gradient(135deg, #4A0E17 0%, #28050A 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            padding: 2rem 6%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; width: 100%; }
+        .logo-area { display: flex; align-items: center; gap: 12px; font-size: 1.4rem; font-weight: 700; }
+        .logo-area i { color: #FFD700; }
+
+        .back-dash-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .back-dash-btn:hover { background: #FFD700; color: #28050A; transform: translateX(-3px); }
+
+        .page-title { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 2.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        .page-title span { color: #FFD700; }
+
+        /* 🌟 Premium Grid for Challan Cards */
+        .challans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: auto;
+        }
+
+        /* 🎫 Digital Challan Card Layout */
+        .digital-challan-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .digital-challan-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        /* Card Header decorations */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .card-top h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-top h3 i { color: #FFD700; }
+
+        .badge { padding: 5px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .badge-paid { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid #2ecc71; }
+        .badge-unpaid { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid #e74c3c; }
+
+        /* Ticket details style */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+        .info-row .label { color: #aaa; }
+        .info-row .value { color: #fff; font-weight: 500; }
+        .info-row .value.highlight { font-family: monospace; color: #FFD700; font-weight: 700; }
+
+        .divider {
+            border: 0;
+            border-top: 1px dashed rgba(255,255,255,0.15);
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        /* Total Amount Area */
+        .total-box {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-box span { font-size: 0.85rem; color: #bbb; }
+        .total-box .price { font-size: 1.4rem; font-weight: 800; color: #FFD700; }
+
+        .no-data { text-align: center; padding: 5rem 2rem; color: #aaa; margin: auto; }
+        .no-data i { font-size: 4rem; color: #2ecc71; margin-bottom: 1.5rem; }
+
+        footer { text-align: center; padding-top: 3rem; font-size: 0.85rem; color: rgba(255, 255, 255, 0.3); }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <i class="fas fa-graduation-cap"></i>
+        <span>UET Transport Portal</span>
+    </div>
+    <a th:href="@{/students/dashboard}" class="back-dash-btn">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</header>
+
+<h2 class="page-title"><i class="fas fa-file-invoice-dollar" style="color: #FFD700; margin-right: 10px;"></i> Fee <span>Challans</span></h2>
+
+<div th:if="${not #lists.isEmpty(challans)}" class="challans-grid">
+
+    <div th:each="challan : ${challans}" class="digital-challan-card">
+
+        <div class="card-top">
+            <h3><i class="fas fa-bus"></i> Transport Invoice</h3>
+            <span th:text="${challan.status}"
+                  th:class="${challan.status == 'PAID' ? 'badge badge-paid' : 'badge badge-unpaid'}">
+                UNPAID
+            </span>
+        </div>
+
+        <div class="info-row">
+            <span class="label">Challan Number</span>
+            <span class="value highlight" th:text="${challan.challanNumber}">CHN-2026-A87F</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Issue Date</span>
+            <span class="value" th:text="${challan.issueDate}">2026-06-01</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Due Date</span>
+            <span class="value" th:text="${challan.dueDate}">2026-06-15</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Base Transport Fee</span>
+            <span class="value">Rs. <span th:text="${challan.amount}">5000.00</span></span>
+        </div>
+        <div class="info-row">
+            <span class="label">Late Fine</span>
+            <span class="value" style="color: #ff8080;">Rs. <span th:text="${challan.fine}">0.00</span></span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="total-box">
+            <span>Total Payable Amount</span>
+            <span class="price">Rs. <span th:text="${challan.amount + challan.fine}">5000.00</span></span>
+        </div>
+    </div>
+
+</div>
+
+<div th:if="${#lists.isEmpty(challans)}" class="no-data">
+    <i class="fas fa-check-circle"></i>
+    <h3 style="color: white; margin-bottom: 0.5rem;">All Dues Clear!</h3>
+    <p>No transport invoices or pending fee challans were found for your account.</p>
+</div>
+
+<footer>
+    University of Engineering & Technology | © 2026 Bus Management System
+</footer>
+
+</body>
+</html>
