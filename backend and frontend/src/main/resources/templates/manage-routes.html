@@ -39,10 +39,16 @@
         .view-stops-btn { background: rgba(255, 215, 0, 0.1); border: 1px solid #FFD700; color: #FFD700; padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; }
         .view-stops-btn:hover { background: #FFD700; color: #28050A; }
 
+        .map-wrapper { display: inline-flex; align-items: center; gap: 6px; }
         .map-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; padding: 0.3rem 0.7rem; border-radius: 50px; text-decoration: none; font-weight: 500; }
         .map-linked { background: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; }
         .map-linked:hover { background: #2ecc71; color: white; }
-        .map-missing { background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #ff8080; }
+
+        .map-edit-inline-btn { background: rgba(255, 215, 0, 0.15); border: 1px solid #FFD700; color: #FFD700; border-radius: 50%; width: 26px; height: 26px; display: inline-flex; justify-content: center; align-items: center; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+        .map-edit-inline-btn:hover { background: #FFD700; color: #28050A; }
+
+        .map-missing { background: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #ff8080; cursor: pointer; transition: 0.2s; }
+        .map-missing:hover { background: #e74c3c; color: white; }
 
         .delete-btn-link { background: rgba(255, 74, 74, 0.1); border: 1px solid #ff4a4a; color: #ff4a4a; padding: 0.4rem 0.9rem; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
         .delete-btn-link:hover { background: #ff4a4a; color: white; }
@@ -100,13 +106,23 @@
                 </button>
             </td>
             <td class="col-map">
-                <a th:if="${route.mapUrl != null and !route.mapUrl.isEmpty()}"
-                   th:href="${route.mapUrl}" target="_blank" class="map-badge map-linked">
-                    <i class="fas fa-map-marker-alt"></i> Open Map
-                </a>
-                <span th:unless="${route.mapUrl != null and !route.mapUrl.isEmpty()}" class="map-badge map-missing">
-                    <i class="fas fa-times-circle"></i> No Link
-                </span>
+                <div class="map-wrapper">
+                    <th:block th:if="${route.mapUrl != null and !route.mapUrl.isEmpty()}">
+                        <a th:href="${route.mapUrl}" target="_blank" class="map-badge map-linked">
+                            <i class="fas fa-map-marker-alt"></i> Open Map
+                        </a>
+                        <button type="button" class="map-edit-inline-btn" title="Edit/Delete Map"
+                                th:onclick="triggerEditMap([[${route.routeId}]], [[${route.routeName}]], [[${route.mapUrl}]])">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </th:block>
+
+                    <span th:unless="${route.mapUrl != null and !route.mapUrl.isEmpty()}"
+                          class="map-badge map-missing"
+                          th:onclick="triggerEditMap([[${route.routeId}]], [[${route.routeName}]], '')">
+                        <i class="fas fa-plus-circle"></i> Add Map
+                    </span>
+                </div>
             </td>
             <td class="col-actions">
                 <a th:onclick="confirmRouteDelete([[${route.routeId}]])" class="delete-btn-link">
@@ -161,6 +177,42 @@
     </div>
 </div>
 
+<div class="modal" id="editMapModal">
+    <div class="modal-content">
+        <div class="modal-header"><i class="fas fa-edit"></i> Manage Route Map URL</div>
+
+        <form action="/routes/update-map" method="POST" id="saveMapForm">
+            <div class="form-group">
+                <label>Selected Route ID</label>
+                <input type="text" id="editMapRouteId" name="routeId" readonly style="background: rgba(255,255,255,0.05); color: #FFD700; font-weight: bold;">
+            </div>
+            <div class="form-group">
+                <label>Route Name</label>
+                <input type="text" id="editMapRouteName" readonly style="background: rgba(255,255,255,0.05); color: #ccc;">
+            </div>
+            <div class="form-group">
+                <label>Google Map URL</label>
+                <input type="text" id="editMapUrlInput" name="mapUrl" placeholder="Paste complete Google Maps link here" required>
+            </div>
+        </form>
+
+        <form action="/routes/delete-map" method="POST" id="deleteMapForm" style="display: none;">
+            <input type="hidden" id="deleteMapRouteId" name="routeId">
+        </form>
+
+        <div class="form-buttons" style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <button type="button" id="modalDeleteMapBtn" class="delete-btn-link" style="padding: 0.5rem 1rem;" onclick="submitDeleteMap()">
+                <i class="fas fa-unlink"></i> Delete Link
+            </button>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="secondary-btn" style="padding:0.5rem 1rem; border-radius:6px; cursor:pointer;" onclick="closeModal('editMapModal')">Cancel</button>
+                <button type="submit" form="saveMapForm" class="action-btn" style="border-radius:6px; background: #FFD700; color: #28050A;">Save Map</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal" id="addStopModal">
     <div class="modal-content">
         <div class="modal-header"><i class="fas fa-map-marker-alt"></i> Attach New Station Stop</div>
@@ -173,7 +225,7 @@
                 <label>Station Stop Name</label>
                 <input type="text" name="stopName" placeholder="e.g., Mughalpura Chowk" required>
             </div>
-            <div class="form-group">
+            <div class="form-group =">
                 <label>Morning Arrival Time</label>
                 <input type="text" name="morningTime" placeholder="e.g., 07:45 AM" required>
             </div>
@@ -212,6 +264,33 @@
     }
     document.getElementById('finalDeleteBtn').onclick = function() {
         if(targetRouteId) window.location.href = "/routes/delete?routeId=" + encodeURIComponent(targetRouteId);
+    }
+
+    // 🆕 JS Function: Controls dynamic inputs for Add, Edit, and Delete map features
+    function triggerEditMap(routeId, routeName, currentMapUrl) {
+        document.getElementById('editMapRouteId').value = routeId;
+        document.getElementById('editMapRouteName').value = routeName;
+        document.getElementById('editMapUrlInput').value = currentMapUrl;
+
+        // Setup hidden delete form data context
+        document.getElementById('deleteMapRouteId').value = routeId;
+
+        // Hide delete link button if route doesn't have an active link mapped yet
+        const deleteBtn = document.getElementById('modalDeleteMapBtn');
+        if(!currentMapUrl || currentMapUrl.trim() === '') {
+            deleteBtn.style.display = 'none';
+        } else {
+            deleteBtn.style.display = 'inline-flex';
+        }
+
+        openModal('editMapModal');
+    }
+
+    // 🆕 JS Function: Submits the asynchronous/hidden clear context mapping schema
+    function submitDeleteMap() {
+        if(confirm("Are you sure you want to remove the map link for this route?")) {
+            document.getElementById('deleteMapForm').submit();
+        }
     }
 
     function loadAndShowStops(routeId) {

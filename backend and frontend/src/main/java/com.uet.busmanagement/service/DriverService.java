@@ -4,9 +4,12 @@ import com.uet.busmanagement.model.Bus;
 import com.uet.busmanagement.model.Driver;
 import com.uet.busmanagement.repository.DriverRepository;
 import com.uet.busmanagement.util.LogManager;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class DriverService {
 
     private DriverRepository driverRepo = new DriverRepository();

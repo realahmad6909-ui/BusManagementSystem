@@ -27,6 +27,30 @@ public class RouteRepository {
             e.printStackTrace();
         }
     }
+    public boolean updateRouteMap(String routeId, String mapUrl) {
+        String query = "UPDATE routes SET map_url = ? WHERE route_id = ?";
+
+        try (Connection conn = db.initializeDatabase();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            // Agar mapUrl null ya khali hai toh database mein direct NULL set ho jaye
+            if (mapUrl == null || mapUrl.trim().isEmpty()) {
+                ps.setNull(1, java.sql.Types.VARCHAR);
+            } else {
+                ps.setString(1, mapUrl.trim());
+            }
+
+            ps.setString(2, routeId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (Exception e) {
+            System.out.println("Error updating/deleting map in RouteRepository: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public List<String> getAllRouteIds() {
         List<String> routesList = new ArrayList<>();

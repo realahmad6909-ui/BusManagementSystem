@@ -66,6 +66,7 @@ import com.uet.busmanagement.service.StopsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -73,11 +74,11 @@ import java.util.List;
 @RequestMapping("/routes")
 public class RouteController {
 
-    // Clean Layer Architecture Rules Following:
+
     private final RouteService routeService = new RouteService();
     private final StopsService stopsService = new StopsService();
 
-    // 1. 📄 DISPLAY MAIN ROUTE MANAGEMENT DASHBOARD
+
     @GetMapping("/manage")
     public String manageRoutes(Model model) {
         // Model se direct saare routes load kiye
@@ -88,7 +89,37 @@ public class RouteController {
         return "manage-routes";
     }
 
-    // 2. 🔍 DYNAMIC AJAX API ENDPOINT FOR POPUP MODAL
+    @PostMapping("/delete-map")
+    public String deleteRouteMap(@RequestParam("routeId") String routeId,
+                                 RedirectAttributes redirectAttributes) {
+
+        boolean updated = routeService.updateRouteMap(routeId, "");
+
+        if (updated) {
+            redirectAttributes.addFlashAttribute("success", "Map link deleted successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete map link.");
+        }
+
+        return "redirect:/routes/manage";
+    }
+    @PostMapping("/update-map")
+    public String updateRouteMap(@RequestParam("routeId") String routeId,
+                                 @RequestParam("mapUrl") String mapUrl,
+                                 RedirectAttributes redirectAttributes) {
+
+        boolean updated = routeService.updateRouteMap(routeId, mapUrl);
+
+        if (updated) {
+            redirectAttributes.addFlashAttribute("success", "Map URL updated successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Failed to update map URL.");
+        }
+
+        return "redirect:/routes/manage";
+    }
+
+
     @GetMapping("/api/stops")
     @ResponseBody
     public List<Stops> getStopsForModal(@RequestParam("routeId") String routeId) {
@@ -96,7 +127,7 @@ public class RouteController {
         return stopsService.getStopsByRouteId(routeId);
     }
 
-    // 3. ➕ CREATE AND SAVE NEW ROUTE
+
     @PostMapping("/add")
     public String handleAddRoute(@RequestParam("routeId") String id,
                                  @RequestParam("routeName") String name,

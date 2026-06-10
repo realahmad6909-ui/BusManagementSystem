@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -221,9 +222,7 @@ public class StudentController {
         return "redirect:/";
     }
 
-    // ==========================================
-    // STUDENT DASHBOARD FUNCTIONALITIES
-    // ==========================================
+
 
     @GetMapping("/profile")
     public String viewProfile(HttpSession session, Model model) {
@@ -283,11 +282,10 @@ public class StudentController {
         model.addAttribute("routes", allRoutes);
         return "student-bus-booking";
     }
-
     @PostMapping("/book")
     public String processBooking(@RequestParam("routeId") String routeId,
                                  HttpSession session,
-                                 Model model) {
+                                 RedirectAttributes redirectAttributes) {
         if (session.getAttribute("loggedInStudent") == null) {
             return "redirect:/students/login";
         }
@@ -295,23 +293,25 @@ public class StudentController {
         Student currentStudent = (Student) session.getAttribute("loggedInStudent");
         String regNum = currentStudent.getRegNum();
 
-
         if (challanService.hasUnpaidChallan(regNum)) {
-            return "redirect:/book?error=ACCESS DENIED: Please pay your outstanding challan first.";
+            redirectAttributes.addAttribute("error", "ACCESS DENIED: Please pay your outstanding challan first.");
+            return "redirect:/students/dashboard";
         }
 
         try {
             String resultMessage = bookingService.processBooking(regNum, routeId);
             if ("Booking successful!".equalsIgnoreCase(resultMessage) || resultMessage.toLowerCase().contains("success")) {
                 String displayId = "UET-BK-" + (10000 + new java.util.Random().nextInt(90000));
-                return "redirect:/book?msg=Seat booked successfully! Reference ID: " + displayId;
+                redirectAttributes.addAttribute("msg", "Seat booked successfully! Reference ID: " + displayId);
+                return "redirect:/students/dashboard";
             } else {
-                return "redirect:/students/book?error=" + resultMessage;
+                redirectAttributes.addAttribute("error", resultMessage);
+                return "redirect:/students/dashboard";
             }
         } catch (Exception e) {
             e.printStackTrace();
-
-            return "redirect:/students/book?error=" ;
+            redirectAttributes.addAttribute("error", "System error: " + e.getMessage());
+            return "redirect:/students/dashboard";
         }
     }
 

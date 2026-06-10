@@ -34,6 +34,10 @@ public class RouteService {
         routeRepo.deleteRoute(id);
     }
 
+    public boolean updateRouteMap(String routeId, String mapUrl) {
+        return routeRepo.updateRouteMap(routeId, mapUrl);
+    }
+
     public void showRouteDetails(String routeId) {
         System.out.println("\nFetching schedule for: " + routeId);
         stopRepo.findByRouteId(routeId);
