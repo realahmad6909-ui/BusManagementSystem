@@ -45,13 +45,13 @@ public class StudentService
         }
     }
 
-    public Student getStudentProfileById(int studentId)
+    public Student getStudentProfile(int studentId)
     {
         return studentRepository.findStudent(studentId);
     }
-    public Student getStudentProfileByregnum(String regNum)
+    public Student getStudentProfile(String regNum)
     {
-        return studentRepository.findStudentbyregnumber(regNum);
+        return studentRepository.findStudent(regNum);
     }
 
 
@@ -78,7 +78,6 @@ public class StudentService
     public Student login(String email, String password) {
         return studentRepository.findByEmailAndPassword(email, password);
     }
-    // StudentService.java
     public String updateProfile(Student student) {
         if (studentRepository.updateStudentInfo(student)) {
             return "Profile updated successfully!";

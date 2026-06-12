@@ -1,8 +1,6 @@
 package com.uet.busmanagement.repository;
 
 import com.uet.busmanagement.config.db;
-import com.uet.busmanagement.model.Bus;
-import com.uet.busmanagement.model.Driver;
 import com.uet.busmanagement.model.Student;
 
 import java.sql.*;
@@ -16,9 +14,7 @@ public class StudentRepository {
         String studentSql = "INSERT INTO students (name, department, regnum, email) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = db.initializeDatabase()) {
-            conn.setAutoCommit(false); // Transaction shuru
-
-            // 1. Insert into 'users'
+            conn.setAutoCommit(false);
             PreparedStatement ps1 = conn.prepareStatement(userSql);
             ps1.setString(1, student.getName());
             ps1.setString(2, student.getEmail());
@@ -26,7 +22,6 @@ public class StudentRepository {
             ps1.setString(4, student.getPhone());
             ps1.executeUpdate();
 
-            // 2. Insert into 'students' (email yahan bridge ka kaam kar raha hai)
             PreparedStatement ps2 = conn.prepareStatement(studentSql);
             ps2.setString(1, student.getName());
             ps2.setString(2, student.getDepartment());
@@ -68,8 +63,8 @@ public class StudentRepository {
         return null;
     }
 
-    public Student findStudentbyregnumber(String regNum) {
-        // FIX: JOIN lagaya taaki 'users' table se phone number bhi load ho sake
+    public Student findStudent(String regNum) {
+
         String query = "SELECT s.*, u.phone FROM students s " +
                 "JOIN users u ON s.email = u.email " +
                 "WHERE s.regnum = ?";
@@ -79,7 +74,6 @@ public class StudentRepository {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Student s = mapResultSetToStudent(rs);
-                // Yahan users table se phone nikal kar student object mein set kar rahe hain
                 s.setPhone(rs.getString("phone"));
                 return s;
             }
@@ -117,7 +111,6 @@ public class StudentRepository {
         }
         return students;
     }
-    // StudentRepository.java
     public boolean updateStudentInfo(Student student) {
         String query = "UPDATE students SET name = ?, department = ? WHERE regnum = ?";
         try (Connection conn = db.initializeDatabase();
@@ -132,7 +125,7 @@ public class StudentRepository {
         return false;
     }
     public Student findByEmailAndPassword(String email, String password) {
-        // FIX: Using email field as bridge constraint instead of wrong ids auto increment match
+
         String query = "SELECT s.* FROM students s " +
                 "JOIN users u ON s.email = u.email " +
                 "WHERE u.email = ? AND u.password = ?";
@@ -157,13 +150,11 @@ public class StudentRepository {
         return null;
     }
     public String getLatestNoticeForRoute(String studentRoute) {
-        // Ab ye query bina kisi route check ke hamesha sabse naya message uthayegi
+
         String query = "SELECT message FROM student_notices ORDER BY id DESC LIMIT 1";
         try (Connection conn = db.initializeDatabase();
              PreparedStatement stmt = conn.prepareStatement(query)){
             ResultSet rs = stmt.executeQuery();
-
-
 
             if (rs.next()) {
                 return rs.getString("message");

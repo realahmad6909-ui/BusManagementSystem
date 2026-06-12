@@ -3,10 +3,10 @@ package com.uet.busmanagement.model;
 public class Stops {
 
     private int stop_id;
-    private String route_id;      // Foreign Key
+    private String route_id;
     private String stop_name;
-    private String morning_arrival_time;  // e.g., "08:00 AM"
-    private String afternoon_departure_time; // e.g., "08:15 AM"
+    private String morning_arrival_time;
+    private String afternoon_departure_time;
 
     public Stops() {
     }
@@ -18,8 +18,6 @@ public class Stops {
         this.morning_arrival_time = morning_arrival_time;
         this.afternoon_departure_time = afternoon_departure_time;
     }
-
-    // Getters
 
     public int getStop_id() {
         return stop_id;

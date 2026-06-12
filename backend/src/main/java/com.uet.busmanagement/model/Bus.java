@@ -24,7 +24,7 @@ public class Bus {
         this.busId = busId;
     }
 
-    // Getters and Setters
+
     public int getBusId() {
         return busId;
     }

@@ -36,26 +36,6 @@ public class ChallanService {
         }
     }
 
-    public void generateAutomaticChallan(int studentId, String regnum) {
-        Challan challan = new Challan();
-        challan.setStudentId(studentId);
-        challan.setRegnum(regnum); // Repository ke exact structure 'regnumb' ke liye
-        challan.setAmount(5000.00); // Default transport fee
-        challan.setFine(0.00);
-
-
-        challan.setIssueDate(LocalDate.now().toString());
-        challan.setDueDate(LocalDate.now().plusDays(15).toString());
-        challan.setStatus("UNPAID");
-
-
-        String uniqueChallanNo = "CHN-" + LocalDate.now().getYear() + "-" +
-                UUID.randomUUID().toString().substring(0, 5).toUpperCase();
-        challan.setChallanNumber(uniqueChallanNo);
-
-
-        generateChallan(challan);
-    }
 
     public String markAsPaid(String challanNumber) {
         boolean isUpdated = challanRepository.updateStatus(challanNumber, "PAID");

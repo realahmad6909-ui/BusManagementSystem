@@ -6,10 +6,9 @@ public class Driver extends User{
 
 
         public Driver() {
-            super(); // Parent User class ka constructor call
+            super();
         }
 
-        // Parametrized Constructor
         public Driver(String name, String email, String password,
                       String role, String phone, String licenseNumber) {
 

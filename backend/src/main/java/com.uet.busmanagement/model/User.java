@@ -2,7 +2,7 @@ package com.uet.busmanagement.model;
 
 public class User
 {
-    protected int userId; // protected takay child class access kar sakay
+    protected int userId;
     protected String name;
     protected String email;
     protected String password;
@@ -14,7 +14,6 @@ public class User
     {
     }
 
-    // Getters and Setters
     public int getUserId()
     {
         return userId;

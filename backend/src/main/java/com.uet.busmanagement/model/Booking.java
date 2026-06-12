@@ -8,7 +8,7 @@ public class Booking {
     private String route_id;
     private Timestamp booking_date;
 
-    // Default Constructor
+
     public Booking() {}
 
 
@@ -17,7 +17,6 @@ public class Booking {
         this.route_id = route_id;
     }
 
-    // Getters and Setters
     public int getBookingid() { return booking_id; }
     public void setBookingid(int booking_id) { this.booking_id = booking_id; }
 

@@ -28,7 +28,6 @@ public class AuthService
             return "Security Alert: Admin accounts cannot be registered from the public screen!";
         }
 
-
         if (user.getRole() == null) {
             user.setRole("STUDENT");
         }
@@ -53,7 +52,7 @@ public class AuthService
                         boolean isStudentSaved = userRepository.saveStudentFields(
                                 newlyCreatedUser.getUserId(),
                                 student.getName(),
-                                student.getEmail(), // 👈 Yeh naya parameter add kiya
+                                student.getEmail(),
                                 student.getRegNum(),
                                 student.getDepartment(),
                                 "PENDING"

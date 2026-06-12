@@ -12,7 +12,6 @@ public class Complaint {
         this.status = "PENDING";
     }
 
-    // Getters and Setters
     public String getRegnum() { return regnum; }
     public String getRouteId() { return routeId; }
     public String getStatus() { return status; }

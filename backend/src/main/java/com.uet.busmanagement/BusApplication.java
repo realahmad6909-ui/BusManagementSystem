@@ -3,7 +3,7 @@ package com.uet.busmanagement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication // Is annotation ka hona lazmi hai
+@SpringBootApplication 
 public class BusApplication {
 
     public static void main(String[] args) {

@@ -79,7 +79,7 @@ public class StudentController {
     @GetMapping("/search")
     public String searchStudent(@RequestParam("keyword") String keyword, Model model) {
         List<Student> students = new java.util.ArrayList<>();
-        Student student = studentService.getStudentProfileByregnum(keyword);
+        Student student = studentService.getStudentProfile(keyword);
         if (student != null) {
             students.add(student);
         }
@@ -132,7 +132,7 @@ public class StudentController {
             return "redirect:/students/login";
         }
 
-        Student detailedStudent = studentService.getStudentProfileByregnum(currentStudent.getRegNum());
+        Student detailedStudent = studentService.getStudentProfile(currentStudent.getRegNum());
         model.addAttribute("student", detailedStudent);
         return "student-profile-edit";
     }
@@ -169,7 +169,7 @@ public class StudentController {
 
         try {
 
-            freshStudent = studentService.getStudentProfileById(sessionStudent.getStudentId());
+            freshStudent = studentService.getStudentProfile(sessionStudent.getStudentId());
 
             if (freshStudent != null && freshStudent.getRegNum() != null) {
                 studentChallans = challanService.getStudentChallans(freshStudent.getRegNum());
@@ -229,7 +229,7 @@ public class StudentController {
         Student currentStudent = (Student) session.getAttribute("loggedInStudent");
         if (currentStudent == null) return "redirect:/students/login";
 
-        Student detailedStudent = studentService.getStudentProfileByregnum(currentStudent.getRegNum());
+        Student detailedStudent = studentService.getStudentProfile(currentStudent.getRegNum());
         model.addAttribute("student", detailedStudent);
         return "student-profile-view";
     }

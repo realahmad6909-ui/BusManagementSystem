@@ -17,7 +17,7 @@ public class UserRepository {
 
             stmt.setInt(1, userId);
             stmt.setString(2, name);
-            stmt.setString(3, email); // 👈 Email bhej diya
+            stmt.setString(3, email);
             stmt.setString(4, regNum);
             stmt.setString(5, department);
             stmt.setString(6, status);
@@ -36,7 +36,7 @@ public class UserRepository {
         try (Connection conn = db.initializeDatabase();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, user.getName() != null ? user.getName() : "Unknown Student");
+            stmt.setString(1, user.getName() != null ? user.getName() : "Unknown");
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPassword());
             stmt.setString(4, user.getRole());

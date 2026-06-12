@@ -11,14 +11,13 @@ public class Challan
     private double amount;
     private String dueDate;
     private String status;
-    private String issueDate; // Advanced: Kab challan generate hua tha
-    private double fine;      // Advanced: Due date guzarne par kitna fine laga
+    private String issueDate;
+    private double fine;
 
     public Challan()
     {
     }
 
-    // Getters and Setters
     public String getChallanNumber()
     {
         return challanNumber;

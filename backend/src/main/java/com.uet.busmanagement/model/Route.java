@@ -2,7 +2,7 @@ package com.uet.busmanagement.model;
 
 public class Route {
 
-    private String routeId;   // e.g., "R1"
+    private String routeId;
     private String routeName;
     private String mapUrl;
 
@@ -32,9 +32,6 @@ public class Route {
     public void setBus(Bus bus) {
         this.bus = bus;
     }
-
-
-
 
     public String getRouteId() { return routeId; }
     public String getRouteName() { return routeName; }

@@ -105,7 +105,7 @@ public class DriverController {
         model.addAttribute("bus", assignedBus);
         return "driver-dashboard";
     }
-    @PostMapping("/drivers/trigger-sos")
+    @PostMapping("/trigger-sos")
     @ResponseBody
     public String triggerSOS(HttpSession session) {
         System.out.println("Backend hit received for SOS via Service Layer!");

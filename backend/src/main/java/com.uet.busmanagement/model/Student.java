@@ -6,7 +6,6 @@ public class Student extends User
     private int studentId;
     private String regNum;
     private String department;
-    private int busid;
     private String status;
     private String email;
 

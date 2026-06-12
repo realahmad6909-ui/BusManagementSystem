@@ -7,14 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* 🔴 TUMHARA ORIGINAL DARK BACKGROUND */
         body {
             background-color: #2b0505;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* 🟡 NAV BAR WITH YELLOW HEADINGS */
         .navbar-custom {
             background-color: #4a0000;
             padding: 15px 0;
@@ -26,7 +24,6 @@
             font-size: 1.6rem;
         }
 
-        /* 🎴 ORIGINAL DARK CARDS STYLE */
         .route-card {
             background: #3d1111;
             border-radius: 16px;
@@ -49,7 +46,6 @@
             flex-grow: 1;
         }
 
-        /* 🟡 ID BADGE */
         .id-badge {
             background-color: #ffcc00;
             color: #000000;
@@ -79,7 +75,6 @@
             width: 24px;
         }
 
-        /* 🟢 STATUS BAR: AVAILABLE (GREEN) */
         .status-available {
             background-color: rgba(25, 135, 84, 0.2);
             color: #26e67b;
@@ -93,7 +88,6 @@
             margin-top: auto;
         }
 
-        /* 🛑 STATUS BAR: FULL (RED) */
         .status-full {
             background-color: rgba(220, 53, 69, 0.15);
             color: #ff6b6b;
@@ -107,7 +101,6 @@
             margin-top: auto;
         }
 
-        /* 🎪 ACTION BUTTONS */
         .btn-action {
             font-weight: bold;
             width: 100%;
@@ -133,7 +126,6 @@
             background-color: #c84235;
         }
 
-        /* 🔔 GREEN NOTIFICATION ALERT BAR */
         .alert-custom-success {
             background-color: rgba(25, 135, 84, 0.2) !important;
             border: 1px solid #198754 !important;
@@ -186,11 +178,13 @@
                     <div class="route-title" th:text="${route.routeName}">R-02</div>
 
                     <div class="info-item">
-                        <i class="fas fa-bus"></i> Bus Name: <strong>UET Bus</strong>
+                        <i class="fas fa-bus"></i> Bus Name:
+                        <strong th:text="${route.bus != null ? route.bus.busName : 'No Bus Assigned'}">UET Bus</strong>
                     </div>
+
                     <div class="info-item mb-4">
                         <i class="fas fa-hashtag"></i> Bus No:
-                        <span th:text="${route.bus != null ? 'UET-' + route.routeId : 'N/A'}">N/A</span>
+                        <span th:text="${route.bus != null ? route.bus.busNumber : 'N/A'}">N/A</span>
                     </div>
 
                     <div th:if="${route.bus == null || route.bus.seatingCapacity <= 0}" class="w-100 mt-auto">
